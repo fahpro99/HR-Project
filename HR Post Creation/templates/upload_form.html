@@ -1,0 +1,131 @@
+<!-- templates/upload_form_bootstrap.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image and Text</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .top-right-image {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px; /* Adjust this value as needed */
+    }
+      </style>
+</head>
+<body>
+    <img src="scomm_logo.png" alt="Your Image" class="top-right-image">
+    <div class="container mt-5">
+        <h1 class="mb-4">Job Description SComm</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="image">Select Background Image:</label>
+                        <input type="file" class="form-control" name="image" id="backgroundImage" accept="image/*" oninput="updateTextPreview()" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="overlay_image">Select Overlay Image:</label>
+                        <input type="file" class="form-control" name="overlay_image" id="overlay_image" accept="image/*" oninput="updateTextPreview()" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text_designation">Designation:</label>
+                        <input type="text" class="form-control" name="text_designation" id="text_designation" oninput="updateTextPreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text_domain">Domain:</label>
+                        <input type="text" class="form-control" name="text_domain" id="text_domain" oninput="updateTextPreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text_department">Department:</label>
+                        <input type="text" class="form-control" name="text_department" id="text_department" oninput="updateTextPreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text_date">Last Date of Application:</label>
+                        <input type="text" class="form-control" name="text_date" id="text_date" oninput="updateTextPreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="file_format">Select File Format:</label>
+                        <select class="form-control" name="file_format" required>
+                            <option value="png">PNG</option>
+                            <option value="jpeg">JPEG</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save and Preview</button>
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Image preview on the right side -->
+                <canvas id="imageCanvas" style="max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js from CDN (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript code for live text preview on the image -->
+    <script>
+        function updateTextPreview() {
+            var designation = document.getElementById('text_designation').value;
+            var domain = document.getElementById('text_domain').value;
+            var department = document.getElementById('text_department').value;
+            var date = document.getElementById('text_date').value;
+
+            var canvas = document.getElementById('imageCanvas');
+            var ctx = canvas.getContext('2d');
+
+            var backgroundImage = document.getElementById('backgroundImage');
+            var overlay_image = document.getElementById('overlay_image');
+            var file = backgroundImage.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = new Image();
+                img.onload = function () {
+                    // Set canvas size to match the image
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    // Draw the image on the canvas
+                    ctx.drawImage(img, 0, 0);
+
+                    // Set font style
+                    ctx.font = '20px Arial';
+                    ctx.fillStyle = 'black';
+
+                    // Draw text on the canvas at specified positions
+                    ctx.fillText(designation, 100, 515);
+                    ctx.fillText(domain, 100, 580);
+                    ctx.fillText(department, 100, 615);
+                    ctx.fillText(date, 100, 870);
+                };
+                img.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
